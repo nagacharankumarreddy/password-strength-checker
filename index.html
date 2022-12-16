@@ -5,42 +5,22 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./style.css">
-    <link rel="icon" href="./21-bug-outline.gif" />
+    <link rel="icon" href="./bug.gif" />
+    <script src="https://code.jquery.com/jquery-3.6.2.min.js" integrity="sha256-2krYZKh//PcchRtd+H+VyyQoZ/e3EcrkxhM8ycwASPA=" crossorigin="anonymous"></script>
+    <script src="./script.js" defer></script>
 
     <title>Password Crack Time</title>
 </head>
-<script>
-    function check(){
-        var x=document.getElementById('pword').value.length;
-        var time=["password empty","0.29 Sec","0.29 Sec","0.29 Sec","0.29 Sec","0.29 Sec","0.29 Sec","0.29 Sec","5 Hours","5 Days","4 Months","1 Decade","2 Centuries"];
-        document.getElementById('res').style.visibility="visible";
 
-        if(x<=12 && x!=0){
-        document.getElementById('res').innerText=time[x];
-        document.getElementById('res').style.margin="7rem";
-        }
-        else if(x==0){
-            document.getElementById('res').innerText=time[x];
-        document.getElementById('res').style.margin="6rem";
-        }
-        else{
-        document.getElementById('res').innerText="More than 2 centuries";
-        document.getElementById('res').style.align="center";
-         document.getElementById('res').style.margin="4rem";
-        }
-
-    }
-    
-</script>
 <body>
     <div class="main">
-      <p class="sign" align="center"> Check Password Crack Time</p>
-      <form class="form1">
-        <input class="pass" id='pword' type="password" align="center" placeholder="Password">
-        <a class="submit" align="center" onclick="check()">Check!</a>
+      <p class="sign" text-align="center"> Check Password Crack Time</p>
+      <form class="userinput">
+        <input class="pass" id='pword' type="text" text-align="center" placeholder="Password">
+        <a  class="submit" text-align="center" onclick="check()">Check!</a>
         <br>
+      </form>
         <br>
-        <div style="visibility: hidden;">hey</div>
         <span id='res' style="visibility: hidden;"></span>
-
+        </div>
 </html>
