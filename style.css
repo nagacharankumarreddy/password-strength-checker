@@ -1,9 +1,11 @@
 body {
-    background: rgb(2,0,36);
-background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(8,37,140,1) 44%, rgba(6,90,175,1) 61%, rgba(3,149,214,1) 80%, rgba(2,181,235,1) 90%, rgba(0,212,255,1) 100%);
     font-family: 'Ubuntu', sans-serif;
     overflow: hidden;
     background: url(./Wave.svg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 100vhs;
 }
 
 .main {
@@ -97,10 +99,5 @@ a {
     text-decoration: none
 }
 
-@media (max-width: 600px) {
-    .main {
-        border-radius: 0px;
-    }
-    
-    
+
 

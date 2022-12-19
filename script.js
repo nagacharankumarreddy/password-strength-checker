@@ -28,9 +28,9 @@ data.set(5, ["Instantly", "Instantly", "Instantly", "Instantly", "Instantly"]);
 data.set(4, ["Instantly", "Instantly", "Instantly", "Instantly", "Instantly"]);
 
 function getStatus(e) {
-  let val = e.target.value.trim();
+  let val = e.target.value;
   let length = val.length;
-  if (length == 0) $("#progress-percentage").width("0%");
+  if (length < 4) length = 4;
   if (length > 18) length = 18;
   let getInfoResult = data.get(length)[getInfo(val)];
   let time = [
@@ -44,7 +44,10 @@ function getStatus(e) {
     "Year",
   ];
   let ind = time.findIndex((e) => getInfoResult?.includes(e));
-  if (ind < 2) {
+  if (e.target.value.length == 0) {
+    $("#progress-percentage").width("0%");
+    $("#status-text").text("Type Password");
+  } else if (ind < 2) {
     $("#status-text").text("Too Weak");
     $("#progress-percentage").width("20%");
     $(".progress-bar").css("background-color", "rgb(255, 0, 0)");
