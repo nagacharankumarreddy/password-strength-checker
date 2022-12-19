@@ -1,26 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./style.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./style.css" />
     <link rel="icon" href="./bug.gif" />
-    <script src="https://code.jquery.com/jquery-3.6.2.min.js" integrity="sha256-2krYZKh//PcchRtd+H+VyyQoZ/e3EcrkxhM8ycwASPA=" crossorigin="anonymous"></script>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+    />
     <script src="./script.js" defer></script>
 
     <title>Password Crack Time</title>
-</head>
+  </head>
 
-<body>
+  <body>
     <div class="main">
-      <p class="sign" text-align="center"> Check Password Crack Time</p>
+      <p class="sign" text-align="center">Check Password Crack Time</p>
       <form class="userinput">
-        <input class="pass" id='pword' type="password" text-align="center" placeholder="Password">
-        <a  class="submit" text-align="center" onclick="check()">Check!</a>
-        <br>
-      </form>
-        <br>
-        <span id='res' style="visibility: hidden;"></span>
+        <input
+          class="pass"
+          id="pword"
+          type="text"
+          text-align="center"
+          placeholder="Password"
+          onkeydown="getStatus(event)"
+          onkeyup="getStatus(event)"
+        />
+        <div class="status">Strength: <span id="status-text"></span></div>
+        <div class="progress">
+          <div
+            id="progress-percentage"
+            class="progress-bar"
+            role="progressbar"
+            style="width: 0%; background-color: red"
+          ></div>
         </div>
+
+        <a class="submit" text-align="center" onclick="check()">Check!</a>
+      </form>
+      <br />
+      <span id="res" style="visibility: hidden"></span>
+    </div>
+    <script
+      src="https://code.jquery.com/jquery-3.6.2.min.js"
+      integrity="sha256-2krYZKh//PcchRtd+H+VyyQoZ/e3EcrkxhM8ycwASPA="
+      crossorigin="anonymous"
+    ></script>
+  </body>
 </html>

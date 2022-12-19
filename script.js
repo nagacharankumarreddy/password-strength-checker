@@ -20,12 +20,52 @@ data.set(13, ["2M Years", "100K Years", "16K Years", "1 Year", "4 Min"]);
 data.set(12, ["34K Years", "2K Years", "300 Years", "3 Weeks", "25 Sec"]);
 data.set(11, ["400 Years", "41 Years", "5 Years", "1 Day", "2 Sec"]);
 data.set(10, ["5 Years", "7 Months", "1 Month", "58 Mins", "Instantly"]);
-data.set(9, ["3 weeks", "3 Days", "19 Hours", "2 Mins", "Instantly"]);
+data.set(9, ["3 Weeks", "3 Days", "19 Hours", "2 Mins", "Instantly"]);
 data.set(8, ["8 Hours", "1 Hour", "22 Mins", "5 Secs", "Instantly"]);
 data.set(7, ["6 Mins", "1 Min", "25 Secs", "Instantly", "Instantly"]);
 data.set(6, ["5 Secs", "1 Sec", "Instantly", "Instantly", "Instantly"]);
 data.set(5, ["Instantly", "Instantly", "Instantly", "Instantly", "Instantly"]);
 data.set(4, ["Instantly", "Instantly", "Instantly", "Instantly", "Instantly"]);
+
+function getStatus(e) {
+  let val = e.target.value.trim();
+  let length = val.length;
+  if (length == 0) $("#progress-percentage").width("0%");
+  if (length > 18) length = 18;
+  let getInfoResult = data.get(length)[getInfo(val)];
+  let time = [
+    "Instantly",
+    "Sec",
+    "Min",
+    "Hour",
+    "Day",
+    "Week",
+    "Month",
+    "Year",
+  ];
+  let ind = time.findIndex((e) => getInfoResult?.includes(e));
+  if (ind < 2) {
+    $("#status-text").text("Too Weak");
+    $("#progress-percentage").width("20%");
+    $(".progress-bar").css("background-color", "rgb(255, 0, 0)");
+  } else if (ind < 4) {
+    $("#status-text").text("Weak");
+    $("#progress-percentage").width("40%");
+    $(".progress-bar").css("background-color", "rgb(190, 60, 0)");
+  } else if (ind == 4) {
+    $("#status-text").text("Medium");
+    $("#progress-percentage").width("60%");
+    $(".progress-bar").css("background-color", "rgb(125, 120, 0)");
+  } else if (ind == 5) {
+    $("#status-text").text("Strong");
+    $("#progress-percentage").width("80%");
+    $(".progress-bar").css("background-color", "rgb(65, 180, 0)");
+  } else {
+    $("#status-text").text("Excellent");
+    $("#progress-percentage").width("100%");
+    $(".progress-bar").css("background-color", "rgb(0, 255, 0)");
+  }
+}
 
 function containsNumber(val) {
   return /(?=.*[0-9])/.test(val);
@@ -76,7 +116,7 @@ function check() {
   if (length < 4) length = 4;
   if (length > 18) length = 18;
   val = $("#pword").val().toString();
-  let result = data.get(length)[getInfo(val)];
+  let result = data.get(length)[getInfo(val)] || "Instantly";
   let ele = document.getElementById("res");
   ele.style.visibility = "visible";
   ele.innerText = result;
