@@ -131,7 +131,8 @@ font-family: 'Ubuntu', sans-serif;
 @media screen and (min-width: 1024px){
     .main{
         width: 80vw;
-        margin-top: 15%;
+        height: 70vh;
+        margin-top: 10%;
     }
     .sign{
         font-size: 5rem;
