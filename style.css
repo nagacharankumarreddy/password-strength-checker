@@ -1,3 +1,7 @@
+html,body{
+    height: 100vh;
+    width: 100vw;
+}
 body {
     font-family: 'Ubuntu', sans-serif;
     overflow: hidden;
@@ -5,13 +9,12 @@ body {
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
-    height: 100vhs;
 }
 
 .main {
     background-color: #FFFFFF;
-    width: 400px;
-    height: 400px;
+    width: 50vw;
+    height: 80%;
     margin: 7em auto;
     border-radius: 1.5em;
     box-shadow: 0px 11px 35px 2px rgba(0, 0, 0, 0.14);
@@ -30,13 +33,13 @@ body {
 }
 
 
-form.userinput {
+.userinput {
     padding: 40px;
    
 }
 
 .pass {
-        width: 76%;
+width: 76%;
 color: rgb(38, 50, 56);
 font-weight: 700;
 font-size: 14px;
@@ -62,42 +65,76 @@ font-family: 'Ubuntu', sans-serif;
 
 .pass:focus {
     border: 2px solid rgba(0, 0, 0, 0.18) !important;
-    
 }
 
-.submit {
-    cursor: pointer;
-    border-radius: 5em;
-    color: #fff;
-    background: linear-gradient(to right, #9C27B0, #E040FB);
-    border: 0;
-    padding-left: 40px;
-    padding-right: 40px;
-    padding-bottom: 10px;
-    padding-top: 10px;
-    font-family: 'Ubuntu', sans-serif;
-    margin-left: 35%;
-    margin-bottom: 10%;
-    font-size: 13px;
-    box-shadow: 0 0 20px 1px rgba(0, 0, 0, 0.04);
-}
+
 #res{
     background-color: rgb(43, 137, 226);
     border-radius: 3rem;
-    padding-left: 40px;
-    padding-right: 40px;
-    padding-bottom: 10px;
-    padding-top: 10px;
-    margin-top: 1rem;
-    
+    text-align: center;
+    padding:1rem ;
+    margin-top: 5rem;
+    width: 60%;
+    margin: 1rem auto;
+
+}
+.btnwrapper{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.submit {
+    padding: 1.3em 3em;
+    font-size: 12px;
+    text-transform: uppercase;
+    background-color: #b3a3ba;
+    letter-spacing: 2.5px;
+    font-weight: 500;
+    color: #000;
+    border: none;
+    border-radius: 45px;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease 0s;
+    cursor: pointer;
+    outline: none;
+    box-shadow: 0 0 20px 1px rgba(0, 0, 0, 0.04);
+
+  }
   
+  .submit:hover {
+    background-color: #23c483;
+    box-shadow: 0px 15px 20px rgba(46, 229, 157, 0.4);
+    color: #fff;
+    transform: translateY(-10px);
+  }
+  
+@media screen and (min-width: 320px){
+    .main{
+        width: 90vw;
+        margin-top: 15%;
+    }
+    .sign{
+        font-size: 2rem;
+    }
 }
+@media screen and (min-width: 768px){
+    .main{
+        width: 60vw;
+        margin-top: 10%;
 
-a {
-    text-shadow: 0px 0px 3px rgba(117, 117, 117, 0.12);
-    color: #E1BEE7;
-    text-decoration: none
+    }
+    .sign{
+        font-size: 3rem;
+    }
 }
-
+@media screen and (min-width: 1024px){
+    .main{
+        width: 80vw;
+        margin-top: 5%;
+    }
+    .sign{
+        font-size: 5rem;
+    }
+}
 
 

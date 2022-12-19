@@ -18,7 +18,7 @@
   <body>
     <div class="main">
       <p class="sign" text-align="center">Check Password Crack Time</p>
-      <form class="userinput">
+      <div class="userinput">
         <input
           class="pass"
           id="pword"
@@ -39,11 +39,12 @@
             style="width: 0%; background-color: red"
           ></div>
         </div>
-
-        <a class="submit" text-align="center" onclick="check()"> Check! </a>
-      </form>
+        <div class="btnwrapper">
+          <button class="submit" onclick="check()">Check</button>
+        </div>
+        <div id="res" style="visibility: hidden"></div>
+      </div>
       <br />
-      <span id="res" style="visibility: hidden"></span>
     </div>
     <script
       src="https://code.jquery.com/jquery-3.6.2.min.js"

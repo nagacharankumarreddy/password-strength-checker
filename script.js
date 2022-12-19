@@ -26,8 +26,14 @@ data.set(7, ["6 Mins", "1 Min", "25 Secs", "Instantly", "Instantly"]);
 data.set(6, ["5 Secs", "1 Sec", "Instantly", "Instantly", "Instantly"]);
 data.set(5, ["Instantly", "Instantly", "Instantly", "Instantly", "Instantly"]);
 data.set(4, ["Instantly", "Instantly", "Instantly", "Instantly", "Instantly"]);
-
+$(document).ready(function () {
+  $("#pword").focus();
+});
 function getStatus(e) {
+  if (e.code === "Enter") {
+    check();
+    return;
+  }
   let val = e.target.value;
   let length = val.length;
   if (length < 4) length = 4;
@@ -47,6 +53,7 @@ function getStatus(e) {
   if (e.target.value.length == 0) {
     $("#progress-percentage").width("0%");
     $("#status-text").text("Type Password");
+    $("#res").css("visibility", "hidden");
   } else if (ind < 2) {
     $("#status-text").text("Too Weak");
     $("#progress-percentage").width("20%");
