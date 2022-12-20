@@ -132,3 +132,24 @@ function check() {
   ele.innerText = result;
   ele.style.align = "center";
 }
+function isvalid() {
+  let inp = document.getElementById("pword");
+  let submit = document.getElementById("submit");
+  if (inp.value == "") {
+    f();
+    submit.innerText = "Enter Password";
+  } else {
+    submit.innerText = "Check";
+    submit.style.left = "45%";
+  }
+}
+flag = 1;
+function f() {
+  if (flag == 1) {
+    submit.style.left = "25%";
+    flag = 2;
+  } else if (flag == 2) {
+    submit.style.left = "65%";
+    flag = 1;
+  }
+}

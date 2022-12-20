@@ -39,9 +39,14 @@
             style="width: 0%; background-color: red"
           ></div>
         </div>
-        <div class="btnwrapper">
-          <button class="submit" onclick="check()">Check</button>
-        </div>
+        <button
+          class="submit"
+          id="submit"
+          onclick="check()"
+          onmouseenter="isvalid()"
+        >
+          Check
+        </button>
         <div id="res" style="visibility: hidden"></div>
       </div>
       <br />
