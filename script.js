@@ -1,155 +1,143 @@
-let data = new Map();
-data.set(18, [
-  "7qd Years",
-  "100 tn Years",
-  "6tn Years",
-  "23m Years",
-  "9 Months",
+// Brute-force time estimates, indexed by password length (4-18) and then by character-set group.
+const CRACK_TIMES = new Map([
+  [18, ["7qd Years", "100 tn Years", "6tn Years", "23m Years", "9 Months"]],
+  [17, ["93tn Years", "2tn Years", "100bn Years", "800k Years", "4 Weeks"]],
+  [16, ["1tn Years", "37bn Years", "2bn Years", "34k Years", "2 Days"]],
+  [15, ["15 bn Years", "600m Years", "43m Years", "1k Years", "6 Hours"]],
+  [14, ["200M Years", "9M Years", "800K Years", "51 Years", "41 Min"]],
+  [13, ["2M Years", "100K Years", "16K Years", "1 Year", "4 Min"]],
+  [12, ["34K Years", "2K Years", "300 Years", "3 Weeks", "25 Sec"]],
+  [11, ["400 Years", "41 Years", "5 Years", "1 Day", "2 Sec"]],
+  [10, ["5 Years", "7 Months", "1 Month", "58 Mins", "Instantly"]],
+  [9, ["3 Weeks", "3 Days", "19 Hours", "2 Mins", "Instantly"]],
+  [8, ["8 Hours", "1 Hour", "22 Mins", "5 Secs", "Instantly"]],
+  [7, ["6 Mins", "1 Min", "25 Secs", "Instantly", "Instantly"]],
+  [6, ["5 Secs", "1 Sec", "Instantly", "Instantly", "Instantly"]],
+  [5, ["Instantly", "Instantly", "Instantly", "Instantly", "Instantly"]],
+  [4, ["Instantly", "Instantly", "Instantly", "Instantly", "Instantly"]],
 ]);
-data.set(17, [
-  "93tn Years",
-  "2tn Years",
-  "100bn Years",
-  "800k Years",
-  "4 Weeks",
-]);
-data.set(16, ["1tn Years", "37bn Years", "2bn Years", "34k Years", "2 Days"]);
-data.set(15, ["15 bn Years", "600m Years", "43m Years", "1k Years", "6 Hours"]);
-data.set(14, ["200M Years", "9M Years", "800K Years", "51 Years", "41 Min"]);
-data.set(13, ["2M Years", "100K Years", "16K Years", "1 Year", "4 Min"]);
-data.set(12, ["34K Years", "2K Years", "300 Years", "3 Weeks", "25 Sec"]);
-data.set(11, ["400 Years", "41 Years", "5 Years", "1 Day", "2 Sec"]);
-data.set(10, ["5 Years", "7 Months", "1 Month", "58 Mins", "Instantly"]);
-data.set(9, ["3 Weeks", "3 Days", "19 Hours", "2 Mins", "Instantly"]);
-data.set(8, ["8 Hours", "1 Hour", "22 Mins", "5 Secs", "Instantly"]);
-data.set(7, ["6 Mins", "1 Min", "25 Secs", "Instantly", "Instantly"]);
-data.set(6, ["5 Secs", "1 Sec", "Instantly", "Instantly", "Instantly"]);
-data.set(5, ["Instantly", "Instantly", "Instantly", "Instantly", "Instantly"]);
-data.set(4, ["Instantly", "Instantly", "Instantly", "Instantly", "Instantly"]);
-$(document).ready(function () {
-  $("#pword").focus();
+
+const UNITS = ["Instantly", "Sec", "Min", "Hour", "Day", "Week", "Month", "Year"];
+
+// Strength levels, from weakest to strongest.
+const LEVELS = [
+  { label: "Too Weak", color: "#f43f5e" },
+  { label: "Weak", color: "#fb923c" },
+  { label: "Medium", color: "#facc15" },
+  { label: "Strong", color: "#a3e635" },
+  { label: "Excellent", color: "#34d399" },
+];
+
+const EMPTY_COLOR = "#475569";
+
+const $input = document.getElementById("pword");
+const $toggle = document.getElementById("toggle");
+const $status = document.getElementById("status-text");
+const $segments = document.getElementById("segments");
+const $checks = document.getElementById("checks");
+const $submit = document.getElementById("submit");
+const $result = document.getElementById("res");
+const $resultValue = document.getElementById("res-value");
+const $resultNote = document.getElementById("res-note");
+
+const traits = (value) => ({
+  length: value.length >= 8,
+  lower: /[a-z]/.test(value),
+  upper: /[A-Z]/.test(value),
+  number: /[0-9]/.test(value),
+  symbol: /\W/.test(value),
 });
-function getStatus(e) {
-  if (e.code === "Enter") {
-    check();
+
+// Index of the character-set group used to look up the estimate (0 = richest mix, 5 = nothing).
+function groupOf({ lower, upper, number, symbol }) {
+  if (number && symbol && upper && lower) return 0;
+  if (number && lower && upper) return 1;
+  if ((upper && lower) || (upper && number) || (number && lower)) return 2;
+  if (upper || lower) return 3;
+  if (number) return 4;
+  return 5;
+}
+
+const estimate = (value) => {
+  const length = Math.min(18, Math.max(4, value.length));
+  return CRACK_TIMES.get(length)[groupOf(traits(value))];
+};
+
+function levelOf(value) {
+  const unit = UNITS.findIndex((u) => estimate(value)?.includes(u));
+  if (unit < 2) return 0;
+  if (unit < 4) return 1;
+  if (unit === 4) return 2;
+  if (unit === 5) return 3;
+  return 4;
+}
+
+function render() {
+  const value = $input.value;
+  const empty = value.length === 0;
+  const level = empty ? -1 : levelOf(value);
+  const color = empty ? EMPTY_COLOR : LEVELS[level].color;
+
+  document.documentElement.style.setProperty("--level", color);
+  $status.textContent = empty ? "Type a password" : LEVELS[level].label;
+  $segments.setAttribute("aria-valuenow", String(level + 1));
+  [...$segments.children].forEach((segment, i) => segment.classList.toggle("on", i <= level));
+
+  const found = traits(value);
+  $checks.querySelectorAll("li").forEach((item) => item.classList.toggle("ok", found[item.dataset.check]));
+
+  if (empty) $result.hidden = true;
+  else if (!$result.hidden) showResult();
+}
+
+function showResult() {
+  const value = $input.value;
+  $resultValue.textContent = estimate(value) || "Instantly";
+  $resultNote.textContent = `${value.length} characters · ${LEVELS[levelOf(value)].label.toLowerCase()}`;
+  $result.hidden = false;
+}
+
+function check() {
+  if ($input.value.length === 0) {
+    $submit.textContent = "Enter a password first";
+    $input.focus();
     return;
   }
-  let val = e.target.value;
-  let length = val.length;
-  if (length < 4) length = 4;
-  if (length > 18) length = 18;
-  let getInfoResult = data.get(length)[getInfo(val)];
-  let time = [
-    "Instantly",
-    "Sec",
-    "Min",
-    "Hour",
-    "Day",
-    "Week",
-    "Month",
-    "Year",
-  ];
-  let ind = time.findIndex((e) => getInfoResult?.includes(e));
-  if (e.target.value.length == 0) {
-    $("#progress-percentage").width("0%");
-    $("#status-text").text("Type Password");
-    $("#res").css("visibility", "hidden");
-  } else if (ind < 2) {
-    $("#status-text").text("Too Weak");
-    $("#progress-percentage").width("20%");
-    $(".progress-bar").css("background-color", "rgb(255, 0, 0)");
-  } else if (ind < 4) {
-    $("#status-text").text("Weak");
-    $("#progress-percentage").width("40%");
-    $(".progress-bar").css("background-color", "rgb(190, 60, 0)");
-  } else if (ind == 4) {
-    $("#status-text").text("Medium");
-    $("#progress-percentage").width("60%");
-    $(".progress-bar").css("background-color", "rgb(125, 120, 0)");
-  } else if (ind == 5) {
-    $("#status-text").text("Strong");
-    $("#progress-percentage").width("80%");
-    $(".progress-bar").css("background-color", "rgb(65, 180, 0)");
+  showResult();
+}
+
+// With an empty field the button playfully dodges the cursor (pointer devices only).
+const canHover = window.matchMedia("(hover: hover)").matches;
+let dodge = 1;
+function nudgeButton() {
+  if (!canHover) return;
+  if ($input.value === "") {
+    $submit.textContent = "Enter a password";
+    $submit.style.transform = `translateX(${dodge * 22}%)`;
+    dodge *= -1;
   } else {
-    $("#status-text").text("Excellent");
-    $("#progress-percentage").width("100%");
-    $(".progress-bar").css("background-color", "rgb(0, 255, 0)");
+    $submit.textContent = "Check";
+    $submit.style.transform = "";
   }
 }
 
-function containsNumber(val) {
-  return /(?=.*[0-9])/.test(val);
-}
-function containsLowercase(val) {
-  return /(?=.*[a-z])/.test(val);
-}
-function containsUppercase(val) {
-  return /(?=.*[A-Z])/.test(val);
-}
-function containsSpecialCharacter(val) {
-  return /(?=.*\W)/.test(val);
-}
-function getInfo(val) {
-  if (
-    containsNumber(val) &&
-    containsSpecialCharacter(val) &&
-    containsUppercase(val) &&
-    containsLowercase(val)
-  ) {
-    console.log("num,low,upp,spe");
-    return 0;
-  } else if (
-    containsNumber(val) &&
-    containsLowercase(val) &&
-    containsUppercase(val)
-  ) {
-    console.log("num,low,upp");
-    return 1;
-  } else if (
-    (containsUppercase(val) && containsLowercase(val)) ||
-    (containsUppercase(val) && containsNumber(val)) ||
-    (containsNumber(val) && containsLowercase(val))
-  ) {
-    console.log("comb 2");
-    return 2;
-  } else if (containsUppercase(val) || containsLowercase(val)) {
-    console.log("upp or low");
-    return 3;
-  } else if (containsNumber(val)) {
-    console.log("num");
-    return 4;
-  } else return 5;
-}
-function check() {
-  let length = document.getElementById("pword").value.length;
-  if (length == 0) return alert("Type password 😥");
-  if (length < 4) length = 4;
-  if (length > 18) length = 18;
-  val = $("#pword").val().toString();
-  let result = data.get(length)[getInfo(val)] || "Instantly";
-  let ele = document.getElementById("res");
-  ele.style.visibility = "visible";
-  ele.innerText = result;
-  ele.style.align = "center";
-}
-function isvalid() {
-  let inp = document.getElementById("pword");
-  let submit = document.getElementById("submit");
-  if (inp.value == "") {
-    f();
-    submit.innerText = "Enter Password";
-  } else {
-    submit.innerText = "Check";
-    submit.style.left = "45%";
-  }
-}
-flag = 1;
-function f() {
-  if (flag == 1) {
-    submit.style.left = "25%";
-    flag = 2;
-  } else if (flag == 2) {
-    submit.style.left = "65%";
-    flag = 1;
-  }
-}
+$input.addEventListener("input", () => {
+  if ($submit.textContent !== "Check") $submit.textContent = "Check";
+  $submit.style.transform = "";
+  render();
+});
+$input.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") check();
+});
+$submit.addEventListener("click", check);
+$submit.addEventListener("mouseenter", nudgeButton);
+$toggle.addEventListener("click", () => {
+  const show = $input.type === "password";
+  $input.type = show ? "text" : "password";
+  $toggle.setAttribute("aria-pressed", String(show));
+  $toggle.setAttribute("aria-label", show ? "Hide password" : "Show password");
+  $input.focus();
+});
+
+$input.focus();
+render();
